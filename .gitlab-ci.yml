@@ -9,7 +9,7 @@ validate:
   stage: validate
   image:
     name: hashicorp/terraform:${TF_VERSION}
-    entrypoint: [""]        # ← this is the fix — clears the terraform entrypoint
+    entrypoint: [""]
   script:
     - |
       FAILED=0
@@ -19,11 +19,7 @@ validate:
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         (
           cd "$dir" || exit 1
-          terraform init \
-            -backend=false \
-            -get=false \
-            -input=false \
-            2>&1
+          terraform init -backend=false -get=false -input=false 2>&1
           terraform validate 2>&1
         )
         if [ $? -ne 0 ]; then
@@ -53,8 +49,14 @@ publish:
       MODULE_NAME=$(echo "$CI_COMMIT_TAG" | cut -d'/' -f1)
       MODULE_VERSION=$(echo "$CI_COMMIT_TAG" | cut -d'/' -f2)
 
+      echo "CI_COMMIT_TAG:  $CI_COMMIT_TAG"
+      echo "MODULE_NAME:    $MODULE_NAME"
+      echo "MODULE_VERSION: $MODULE_VERSION"
+      echo "CI_PROJECT_ID:  $CI_PROJECT_ID"
+      echo "CI_API_V4_URL:  $CI_API_V4_URL"
+
       if [ -z "$MODULE_NAME" ] || [ -z "$MODULE_VERSION" ]; then
-        echo "Could not parse MODULE_NAME or MODULE_VERSION from tag: $CI_COMMIT_TAG"
+        echo "Could not parse MODULE_NAME or MODULE_VERSION"
         exit 1
       fi
 
@@ -63,15 +65,17 @@ publish:
         exit 1
       fi
 
-      echo "Publishing module: $MODULE_NAME version: $MODULE_VERSION"
+      UPLOAD_URL="${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/terraform/modules/${MODULE_NAME}/aws/${MODULE_VERSION}/file"
+      echo "Uploading to: $UPLOAD_URL"
 
       tar -czf /tmp/${MODULE_NAME}-${MODULE_VERSION}.tgz \
         -C modules/${MODULE_NAME} .
 
       curl --fail \
+        --verbose \
         --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
         --upload-file /tmp/${MODULE_NAME}-${MODULE_VERSION}.tgz \
-        "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/terraform/modules/cameron/${MODULE_NAME}/aws/${MODULE_VERSION}/file"
+        "$UPLOAD_URL" 2>&1
 
       echo "Published ${MODULE_NAME} v${MODULE_VERSION} successfully"
   rules:
