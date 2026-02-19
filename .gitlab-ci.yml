@@ -5,44 +5,82 @@ stages:
 variables:
   TF_VERSION: "1.6.0"
 
-# Validate every module on every push
 validate:
   stage: validate
   image: hashicorp/terraform:${TF_VERSION}
   script:
     - |
+      FAILED=0
       for dir in modules/*/; do
-        echo "Validating $dir"
-        cd $dir
-        terraform init -backend=false
-        terraform validate
-        cd ../..
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "Validating: $dir"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+        # Use subshell () so cd doesn't affect the parent loop
+        (
+          cd "$dir" || exit 1
+          terraform init \
+            -backend=false \
+            -get=false \
+            -input=false \
+            2>&1
+
+          terraform validate 2>&1
+        )
+
+        # Capture subshell exit code
+        if [ $? -ne 0 ]; then
+          echo "❌ FAILED: $dir"
+          FAILED=1
+        else
+          echo "✅ PASSED: $dir"
+        fi
       done
+
+      # Fail the job if any module failed
+      if [ $FAILED -ne 0 ]; then
+        echo "One or more modules failed validation"
+        exit 1
+      fi
   rules:
     - if: '$CI_COMMIT_BRANCH'
 
-# Publish triggered by a Git tag like: lambda/1.0.0
 publish:
   stage: publish
   image: curlimages/curl:latest
   script:
     - |
-      # Parse module name and version from the tag
-      # Tag format: <module_name>/<version>  e.g. lambda/1.2.0
-      MODULE_NAME=$(echo $CI_COMMIT_TAG | cut -d'/' -f1)
-      MODULE_VERSION=$(echo $CI_COMMIT_TAG | cut -d'/' -f2)
+      # Validate tag was set
+      if [ -z "$CI_COMMIT_TAG" ]; then
+        echo "CI_COMMIT_TAG is not set"
+        exit 1
+      fi
+
+      MODULE_NAME=$(echo "$CI_COMMIT_TAG" | cut -d'/' -f1)
+      MODULE_VERSION=$(echo "$CI_COMMIT_TAG" | cut -d'/' -f2)
+
+      # Validate parsed values
+      if [ -z "$MODULE_NAME" ] || [ -z "$MODULE_VERSION" ]; then
+        echo "Could not parse MODULE_NAME or MODULE_VERSION from tag: $CI_COMMIT_TAG"
+        exit 1
+      fi
+
+      # Validate module directory exists
+      if [ ! -d "modules/${MODULE_NAME}" ]; then
+        echo "Module directory not found: modules/${MODULE_NAME}"
+        exit 1
+      fi
 
       echo "Publishing module: $MODULE_NAME version: $MODULE_VERSION"
 
-      # Create the archive of just this module
-      tar -czf /tmp/${MODULE_NAME}-${MODULE_VERSION}.tgz -C modules/${MODULE_NAME} .
+      tar -czf /tmp/${MODULE_NAME}-${MODULE_VERSION}.tgz \
+        -C modules/${MODULE_NAME} .
 
-      # Upload to GitLab Terraform Module Registry
       curl --fail \
         --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
         --upload-file /tmp/${MODULE_NAME}-${MODULE_VERSION}.tgz \
         "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/terraform/modules/cameron/${MODULE_NAME}/aws/${MODULE_VERSION}/file"
 
-      echo "Published ${MODULE_NAME} v${MODULE_VERSION} to GitLab registry"
+      echo "Published ${MODULE_NAME} v${MODULE_VERSION} successfully"
   rules:
     - if: '$CI_COMMIT_TAG =~ /^[a-z_]+\/[0-9]+\.[0-9]+\.[0-9]+$/'
