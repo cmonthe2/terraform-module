@@ -1,4 +1,20 @@
 # ── VPC ──────────────────────────────────────────────────────────────────────
+
+locals {
+  # Validate subnet counts match AZ count at plan time
+  validate_public_subnets = (
+    length(var.public_subnet_cidrs) == length(var.availability_zones)
+    ? true
+    : tobool("public_subnet_cidrs count (${length(var.public_subnet_cidrs)}) must match availability_zones count (${length(var.availability_zones)})")
+  )
+
+  validate_private_subnets = (
+    length(var.private_subnet_cidrs) == length(var.availability_zones)
+    ? true
+    : tobool("private_subnet_cidrs count (${length(var.private_subnet_cidrs)}) must match availability_zones count (${length(var.availability_zones)})")
+  )
+}
+
 resource "aws_vpc" "this" {
   cidr_block           = var.cidr_block
   enable_dns_hostnames = var.enable_dns_hostnames
