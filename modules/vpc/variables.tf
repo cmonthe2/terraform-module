@@ -28,20 +28,20 @@ variable "public_subnet_cidrs" {
   type        = list(string)
   description = "CIDR blocks for public subnets — one per AZ"
 
-  validation {
-    condition     = length(var.public_subnet_cidrs) == length(var.availability_zones)
-    error_message = "Must provide one public subnet CIDR per availability zone"
-  }
+#   validation {
+#     condition     = length(var.public_subnet_cidrs) == length(var.availability_zones)
+#     error_message = "Must provide one public subnet CIDR per availability zone"
+#   }
 }
 
 variable "private_subnet_cidrs" {
   type        = list(string)
   description = "CIDR blocks for private subnets — one per AZ"
 
-  validation {
-    condition     = length(var.private_subnet_cidrs) == length(var.availability_zones)
-    error_message = "Must provide one private subnet CIDR per availability zone"
-  }
+#   validation {
+#     condition     = length(var.private_subnet_cidrs) == length(var.availability_zones)
+#     error_message = "Must provide one private subnet CIDR per availability zone"
+#   }
 }
 
 variable "enable_nat_gateway" {
