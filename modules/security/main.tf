@@ -1,23 +1,3 @@
-resource "aws_security_group" "bastion" {
-  name        = "${var.project_name}-${var.environment}-sg-bastion"
-  description = "SSH from your IP only"
-  vpc_id      = var.vpc_id
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [var.my_ip_cidr]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  tags = { Name = "${var.project_name}-${var.environment}-sg-bastion" }
-}
-
 resource "aws_security_group" "alb" {
   name        = "${var.project_name}-${var.environment}-sg-alb"
   description = "HTTP/HTTPS from internet"
@@ -46,7 +26,7 @@ resource "aws_security_group" "alb" {
 
 resource "aws_security_group" "app" {
   name        = "${var.project_name}-${var.environment}-sg-app"
-  description = "HTTP from ALB only, SSH from bastion only"
+  description = "HTTP from ALB only — no SSH, SSM handles access"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -54,12 +34,6 @@ resource "aws_security_group" "app" {
     to_port         = 80
     protocol        = "tcp"
     security_groups = [aws_security_group.alb.id]
-  }
-  ingress {
-    from_port       = 22
-    to_port         = 22
-    protocol        = "tcp"
-    security_groups = [aws_security_group.bastion.id]
   }
   egress {
     from_port   = 0
