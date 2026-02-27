@@ -18,8 +18,3 @@ variable "vpc_id" {
 #   type        = string
 
 # }
-variable "my_ip_cidr" {
-  description = "CIDR block representing your current IP address (e.g., 192.168.1.0/24)"
-  type        = string
-
-}
