@@ -86,31 +86,31 @@
 #   default     = {}
 # }
 
-variable "project_name"        { 
+variable "project_name" {
   description = "Name of the project, used for tagging and naming resources"
   type        = string
 }
-variable "environment"         {
+variable "environment" {
   description = "Environment name (e.g., dev, staging, prod)"
   type        = string
 }
-variable "vpc_cidr"            { 
+variable "vpc_cidr" {
   description = "CIDR block for the VPC"
   type        = string
 }
-variable "availability_zones"  { 
+variable "availability_zones" {
   description = "List of availability zones to deploy subnets into"
   type        = list(string)
 }
-variable "public_subnets"      { 
+variable "public_subnets" {
   description = "List of CIDR blocks for public subnets"
   type        = list(string)
 }
-variable "private_app_subnets" { 
+variable "private_app_subnets" {
   description = "List of CIDR blocks for private application subnets"
   type        = list(string)
 }
-variable "private_db_subnets"  { 
+variable "private_db_subnets" {
   description = "List of CIDR blocks for private database subnets"
   type        = list(string)
 }

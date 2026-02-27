@@ -1,6 +1,6 @@
 locals {
   # Build a map of unique resource paths from the routes list
-  # e.g. ["/orders", "/orders/{order_id}"] 
+  # e.g. ["/orders", "/orders/{order_id}"]
   unique_paths = distinct([for r in var.routes : r.path])
 
   # Split each path into segments to build the resource tree
@@ -64,7 +64,7 @@ resource "aws_api_gateway_integration" "this" {
   rest_api_id             = aws_api_gateway_rest_api.this.id
   resource_id             = aws_api_gateway_resource.this[each.value.path].id
   http_method             = aws_api_gateway_method.this[each.key].http_method
-  integration_http_method = "POST"      # always POST when invoking Lambda
+  integration_http_method = "POST" # always POST when invoking Lambda
   type                    = "AWS_PROXY"
   uri                     = var.lambda_invoke_arn
 }
@@ -192,7 +192,7 @@ resource "aws_cloudwatch_log_group" "this" {
 resource "aws_api_gateway_method_settings" "this" {
   rest_api_id = aws_api_gateway_rest_api.this.id
   stage_name  = aws_api_gateway_stage.this.stage_name
-  method_path = "*/*"    # top-level, not inside settings block
+  method_path = "*/*" # top-level, not inside settings block
 
   settings {
     throttling_burst_limit = var.throttling_burst_limit

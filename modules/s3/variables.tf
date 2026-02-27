@@ -2,7 +2,7 @@ variable "bucket_name" {
   description = "The name of the S3 bucket. Must be globally unique."
   type        = string
 }
-   
+
 
 variable "kms_key_arn" {
   description = "The ARN of the KMS key to use for server-side encryption of the S3 bucket."
@@ -19,8 +19,8 @@ variable "versioning_enabled" {
 variable "lifecycle_rules" {
   description = "The lifecycle rules for the S3 bucket."
   type = list(object({
-    id                        = string
-    expiration_days           = number
+    id                         = string
+    expiration_days            = number
     noncurrent_expiration_days = number
   }))
   default = []

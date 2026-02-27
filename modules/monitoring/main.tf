@@ -1,7 +1,7 @@
 resource "aws_cloudwatch_log_group" "flow_logs" {
   name              = "/aws/vpc/flow-logs/${var.project_name}-${var.environment}"
   retention_in_days = var.flow_log_retention_days
-  tags = { Name = "${var.project_name}-${var.environment}-flow-logs" }
+  tags              = { Name = "${var.project_name}-${var.environment}-flow-logs" }
 }
 
 resource "aws_iam_role" "flow_logs" {
@@ -34,5 +34,5 @@ resource "aws_flow_log" "main" {
   traffic_type    = "ALL"
   iam_role_arn    = aws_iam_role.flow_logs.arn
   log_destination = aws_cloudwatch_log_group.flow_logs.arn
-  tags = { Name = "${var.project_name}-${var.environment}-flow-log" }
+  tags            = { Name = "${var.project_name}-${var.environment}-flow-log" }
 }

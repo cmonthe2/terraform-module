@@ -17,7 +17,7 @@ variable "visibility_timeout_seconds" {
 variable "message_retention_seconds" {
   type        = number
   description = "How long SQS retains a message before deleting it"
-  default     = 345600   # 4 days
+  default     = 345600 # 4 days
 
   validation {
     condition     = var.message_retention_seconds >= 60 && var.message_retention_seconds <= 1209600

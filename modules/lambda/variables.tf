@@ -58,15 +58,15 @@ variable "environment_variables" {
   default     = {}
 }
 
-variable "account_id" {
-  type        = string
-  description = "AWS account ID"
-}
+# variable "account_id" {
+#   type        = string
+#   description = "AWS account ID"
+# }
 
-variable "region" {
-  type        = string
-  description = "AWS region"
-}
+# variable "region" {
+#   type        = string
+#   description = "AWS region"
+# }
 
 variable "log_retention_days" {
   type        = number

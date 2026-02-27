@@ -27,8 +27,8 @@ resource "aws_db_instance" "main" {
   maintenance_window      = "Mon:04:00-Mon:05:00"
   multi_az                = false
 
-  deletion_protection       = false
-  skip_final_snapshot       = true
+  deletion_protection = false
+  skip_final_snapshot = true
 
   tags = { Name = "${var.project_name}-${var.environment}-db" }
 }

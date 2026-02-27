@@ -6,10 +6,10 @@ locals {
 
 # ── Dead Letter Queue ─────────────────────────────────────────────────────────
 resource "aws_sqs_queue" "dlq" {
-  name                        = local.dlq_name
-  fifo_queue                  = var.fifo_queue
-  message_retention_seconds   = 1209600   # 14 days — max, gives you time to investigate
-  kms_master_key_id           = var.kms_key_arn
+  name                      = local.dlq_name
+  fifo_queue                = var.fifo_queue
+  message_retention_seconds = 1209600 # 14 days — max, gives you time to investigate
+  kms_master_key_id         = var.kms_key_arn
 
   tags = merge(var.tags, { Name = local.dlq_name, Type = "dlq" })
 }
@@ -97,6 +97,6 @@ resource "aws_lambda_event_source_mapping" "this" {
   function_response_types = ["ReportBatchItemFailures"]
 
   scaling_config {
-    maximum_concurrency = 10   # cap concurrent Lambda invocations from this queue
+    maximum_concurrency = 10 # cap concurrent Lambda invocations from this queue
   }
 }

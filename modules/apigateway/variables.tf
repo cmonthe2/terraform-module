@@ -19,10 +19,10 @@ variable "lambda_invoke_arn" {
   description = "Invoke ARN of the Lambda function to integrate with"
 }
 
-variable "lambda_function_name" {
-  type        = string
-  description = "Name of the Lambda function — used for permission resource"
-}
+# variable "lambda_function_name" {
+#   type        = string
+#   description = "Name of the Lambda function — used for permission resource"
+# }
 
 variable "endpoint_type" {
   type        = string
@@ -37,10 +37,10 @@ variable "endpoint_type" {
 
 variable "routes" {
   type = list(object({
-    method        = string
-    path          = string
-    authorization = optional(string, "NONE")
-    authorizer_id = optional(string, null)
+    method           = string
+    path             = string
+    authorization    = optional(string, "NONE")
+    authorizer_id    = optional(string, null)
     api_key_required = optional(bool, false)
   }))
   description = "List of routes to create on the API"

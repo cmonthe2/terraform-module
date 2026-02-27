@@ -199,7 +199,7 @@ resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true
   enable_dns_hostnames = true
-  tags = { Name = "${var.project_name}-${var.environment}-vpc" }
+  tags                 = { Name = "${var.project_name}-${var.environment}-vpc" }
 }
 
 resource "aws_internet_gateway" "main" {
@@ -213,7 +213,7 @@ resource "aws_subnet" "public" {
   cidr_block              = var.public_subnets[count.index]
   availability_zone       = var.availability_zones[count.index]
   map_public_ip_on_launch = true
-  tags = { Name = "${var.project_name}-${var.environment}-public-${count.index + 1}" }
+  tags                    = { Name = "${var.project_name}-${var.environment}-public-${count.index + 1}" }
 }
 
 resource "aws_subnet" "private_app" {
@@ -221,7 +221,7 @@ resource "aws_subnet" "private_app" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = var.private_app_subnets[count.index]
   availability_zone = var.availability_zones[count.index]
-  tags = { Name = "${var.project_name}-${var.environment}-private-app-${count.index + 1}" }
+  tags              = { Name = "${var.project_name}-${var.environment}-private-app-${count.index + 1}" }
 }
 
 resource "aws_subnet" "private_db" {
@@ -229,7 +229,7 @@ resource "aws_subnet" "private_db" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = var.private_db_subnets[count.index]
   availability_zone = var.availability_zones[count.index]
-  tags = { Name = "${var.project_name}-${var.environment}-private-db-${count.index + 1}" }
+  tags              = { Name = "${var.project_name}-${var.environment}-private-db-${count.index + 1}" }
 }
 
 resource "aws_eip" "nat" {

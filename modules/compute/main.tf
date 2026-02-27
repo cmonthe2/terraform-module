@@ -18,7 +18,7 @@ resource "aws_instance" "bastion" {
   vpc_security_group_ids      = [var.bastion_sg_id]
   key_name                    = var.key_pair_name
   associate_public_ip_address = true
-  tags = { Name = "${var.project_name}-${var.environment}-bastion" }
+  tags                        = { Name = "${var.project_name}-${var.environment}-bastion" }
 }
 
 resource "aws_lb" "main" {
@@ -27,7 +27,7 @@ resource "aws_lb" "main" {
   load_balancer_type = "application"
   security_groups    = [var.alb_sg_id]
   subnets            = var.public_subnet_ids
-  tags = { Name = "${var.project_name}-${var.environment}-alb" }
+  tags               = { Name = "${var.project_name}-${var.environment}-alb" }
 }
 
 resource "aws_lb_target_group" "app" {
