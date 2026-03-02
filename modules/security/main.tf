@@ -1,6 +1,7 @@
 resource "aws_security_group" "alb" {
   name        = "${var.project_name}-${var.environment}-sg-alb"
-  description = "HTTP/HTTPS from internet"
+  description = "HTTP from ALB only - no SSH, SSM handles access"
+
   vpc_id      = var.vpc_id
 
   ingress {
