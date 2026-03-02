@@ -28,7 +28,7 @@ resource "aws_iam_role" "app" {
 # Attach SSM managed policy — this is what allows Session Manager to work
 resource "aws_iam_role_policy_attachment" "ssm" {
   role       = aws_iam_role.app.name
-  policy_arn = "arn:aws:iam::aws:policies/AmazonSSMManagedInstanceCore"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 # Instance profile — wraps the IAM role so EC2 can use it
