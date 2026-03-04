@@ -11,3 +11,10 @@ backend.tfvars
 *.tfplan
 *.out
 !.terraform.lock.hcl
+
+# IDE
+.vscode/
+.idea/
+
+# Kiro
+.kiro/
