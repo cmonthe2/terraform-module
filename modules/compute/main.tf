@@ -43,7 +43,7 @@ resource "aws_lb" "main" {
   load_balancer_type = "application"
   security_groups    = [var.alb_sg_id]
   subnets            = var.public_subnet_ids
-  tags = { Name = "${var.project_name}-${var.environment}-alb" }
+  tags               = { Name = "${var.project_name}-${var.environment}-alb" }
 }
 
 resource "aws_lb_target_group" "app" {
