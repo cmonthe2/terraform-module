@@ -16,8 +16,8 @@ provider "aws" {
 module "s3_bucket" {
   source = "../../modules/s3"
 
-  bucket_name         = "${var.project_name}-${var.environment}-bucket-${data.aws_caller_identity.current.account_id}"
-  versioning_enabled  = true
+  bucket_name        = "${var.project_name}-${var.environment}-bucket-${data.aws_caller_identity.current.account_id}"
+  versioning_enabled = true
 
   lifecycle_rules = [
     {
@@ -38,8 +38,8 @@ module "s3_bucket" {
 module "s3_bucket_with_notifications" {
   source = "../../modules/s3"
 
-  bucket_name         = "${var.project_name}-${var.environment}-events-${data.aws_caller_identity.current.account_id}"
-  versioning_enabled  = true
+  bucket_name        = "${var.project_name}-${var.environment}-events-${data.aws_caller_identity.current.account_id}"
+  versioning_enabled = true
 
   lambda_notifications = [
     {

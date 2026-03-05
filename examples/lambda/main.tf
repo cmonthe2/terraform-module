@@ -25,8 +25,8 @@ module "lambda_function" {
   zip_path      = "lambda_function.zip"
   source_hash   = filebase64sha256("lambda_function.zip")
 
-  memory_mb      = 256
-  timeout_sec    = 60
+  memory_mb          = 256
+  timeout_sec        = 60
   log_retention_days = 30
 
   environment_variables = {
@@ -51,8 +51,8 @@ module "lambda_with_vpc" {
   zip_path      = "lambda_function.zip"
   source_hash   = filebase64sha256("lambda_function.zip")
 
-  memory_mb      = 512
-  timeout_sec    = 120
+  memory_mb          = 512
+  timeout_sec        = 120
   log_retention_days = 30
 
   # VPC configuration for database access

@@ -47,12 +47,12 @@ module "api_gateway" {
     }
   ]
 
-  enable_access_logs      = true
-  log_retention_days      = 30
-  throttling_burst_limit  = 500
-  throttling_rate_limit   = 1000
-  enable_api_key          = false
-  cors_origins            = ["https://example.com", "https://app.example.com"]
+  enable_access_logs     = true
+  log_retention_days     = 30
+  throttling_burst_limit = 500
+  throttling_rate_limit  = 1000
+  enable_api_key         = false
+  cors_origins           = ["https://example.com", "https://app.example.com"]
 
   tags = {
     Environment = var.environment

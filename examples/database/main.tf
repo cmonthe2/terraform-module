@@ -16,15 +16,15 @@ provider "aws" {
 module "database" {
   source = "../../modules/database"
 
-  project_name           = var.project_name
-  environment            = var.environment
-  db_instance_class      = "db.t3.micro"
-  db_allocated_storage   = 20
-  db_name                = "exampledb"
-  db_username            = "admin"
-  db_password            = var.db_password
-  private_db_subnet_ids  = var.private_subnet_ids
-  db_sg_id               = aws_security_group.db_sg.id
+  project_name          = var.project_name
+  environment           = var.environment
+  db_instance_class     = "db.t3.micro"
+  db_allocated_storage  = 20
+  db_name               = "exampledb"
+  db_username           = "admin"
+  db_password           = var.db_password
+  private_db_subnet_ids = var.private_subnet_ids
+  db_sg_id              = aws_security_group.db_sg.id
 
   tags = {
     Environment = var.environment
