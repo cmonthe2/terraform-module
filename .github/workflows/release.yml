@@ -45,12 +45,10 @@ jobs:
           cd ../..
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: ${{ steps.parse_tag.outputs.module_name }}-${{ steps.parse_tag.outputs.module_version }}.tar.gz
-          tag_name: ${{ steps.parse_tag.outputs.tag }}
-          name: ${{ steps.parse_tag.outputs.module_name }} v${{ steps.parse_tag.outputs.module_version }}
-          draft: false
-          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.parse_tag.outputs.tag }}" \
+            "${{ steps.parse_tag.outputs.module_name }}-${{ steps.parse_tag.outputs.module_version }}.tar.gz" \
+            --title "${{ steps.parse_tag.outputs.module_name }} v${{ steps.parse_tag.outputs.module_version }}" \
+            --draft=false
