@@ -1,0 +1,53 @@
+name: Publish Module Release
+
+on:
+  push:
+    tags:
+      - '**'
+
+jobs:
+  publish:
+    name: Publish Module
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Parse tag
+        id: parse_tag
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          MODULE_NAME=$(echo "$TAG" | cut -d'/' -f1)
+          MODULE_VERSION=$(echo "$TAG" | cut -d'/' -f2)
+
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "module_name=$MODULE_NAME" >> $GITHUB_OUTPUT
+          echo "module_version=$MODULE_VERSION" >> $GITHUB_OUTPUT
+
+          echo "Tag: $TAG"
+          echo "Module: $MODULE_NAME"
+          echo "Version: $MODULE_VERSION"
+
+      - name: Validate module exists
+        run: |
+          if [ ! -d "modules/${{ steps.parse_tag.outputs.module_name }}" ]; then
+            echo "ERROR: Module directory not found: modules/${{ steps.parse_tag.outputs.module_name }}"
+            exit 1
+          fi
+
+      - name: Create release archive
+        run: |
+          cd modules/${{ steps.parse_tag.outputs.module_name }}
+          tar -czf ../../${{ steps.parse_tag.outputs.module_name }}-${{ steps.parse_tag.outputs.module_version }}.tar.gz .
+          cd ../..
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ steps.parse_tag.outputs.module_name }}-${{ steps.parse_tag.outputs.module_version }}.tar.gz
+          tag_name: ${{ steps.parse_tag.outputs.tag }}
+          name: ${{ steps.parse_tag.outputs.module_name }} v${{ steps.parse_tag.outputs.module_version }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
