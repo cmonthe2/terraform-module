@@ -255,7 +255,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref_type == 'branch'
     container:
-      image: hashicorp/terraform:${{ env.TF_VERSION }}
+      image: hashicorp/terraform:1.6.0
       options: --entrypoint ""
     steps:
       - name: Checkout
