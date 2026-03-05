@@ -116,3 +116,9 @@ variable "tags" {
   description = "Tags to apply to all resources"
   default     = {}
 }
+
+variable "kms_key_id" {
+  type        = string
+  description = "KMS key ID for CloudWatch Logs encryption"
+  default     = null
+}

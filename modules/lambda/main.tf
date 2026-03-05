@@ -25,6 +25,10 @@ resource "aws_lambda_function" "this" {
     }
   }
 
+  tracing_config {
+    mode = "Active"
+  }
+
   depends_on = [
     aws_iam_role_policy_attachment.basic_logging,
     aws_cloudwatch_log_group.this
