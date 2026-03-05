@@ -48,6 +48,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Delete existing release if it exists
+          gh release delete "${{ steps.parse_tag.outputs.tag }}" --yes || true
+          
+          # Create new release
           gh release create "${{ steps.parse_tag.outputs.tag }}" \
             "${{ steps.parse_tag.outputs.module_name }}-${{ steps.parse_tag.outputs.module_version }}.tar.gz" \
             --title "${{ steps.parse_tag.outputs.module_name }} v${{ steps.parse_tag.outputs.module_version }}" \
