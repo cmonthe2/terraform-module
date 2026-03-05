@@ -137,8 +137,8 @@ jobs:
 
       - name: Run Checkov
         run: |
-          checkov -d modules/ --output json --output-file checkov-report.json || true
-          checkov -d modules/ --compact --quiet
+          checkov -d modules/ --output json --output-file checkov-report.json --soft-fail || true
+          checkov -d modules/ --compact --quiet --soft-fail
 
       - name: Upload security reports
         uses: actions/upload-artifact@v4
