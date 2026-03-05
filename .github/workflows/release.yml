@@ -1,4 +1,4 @@
-name: Publish Module Release
+name: Release Module
 
 on:
   push:
