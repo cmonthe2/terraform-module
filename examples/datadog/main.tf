@@ -35,7 +35,7 @@ output "metric_stream_name" {
 }
 
 output "setup_instructions" {
-  value = <<-EOT
+  value       = <<-EOT
     Datadog Integration Setup Complete!
     
     Next steps:

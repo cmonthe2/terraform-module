@@ -49,14 +49,14 @@ resource "aws_cloudwatch_metric_stream" "datadog" {
 
 # Kinesis Firehose to deliver metrics to Datadog
 resource "aws_kinesis_firehose_delivery_stream" "datadog" {
-  name            = "${var.environment}-datadog-firehose"
-  destination     = "http_endpoint"
+  name                 = "${var.environment}-datadog-firehose"
+  destination          = "http_endpoint"
   delivery_stream_type = "DirectPut"
 
   http_endpoint_configuration {
-    url                = "https://aws-metric-stream.${var.datadog_site}.datadoghq.com/v2/intake"
-    name               = "Datadog"
-    role_arn           = aws_iam_role.firehose_role.arn
+    url      = "https://aws-metric-stream.${var.datadog_site}.datadoghq.com/v2/intake"
+    name     = "Datadog"
+    role_arn = aws_iam_role.firehose_role.arn
     cloudwatch_logging_options {
       enabled         = true
       log_group_name  = aws_cloudwatch_log_group.firehose_logs.name
@@ -75,9 +75,9 @@ resource "aws_kinesis_firehose_delivery_stream" "datadog" {
   }
 
   s3_configuration {
-    role_arn   = aws_iam_role.firehose_role.arn
-    bucket_arn = aws_s3_bucket.firehose_backup.arn
-    prefix     = "datadog-failed/"
+    role_arn            = aws_iam_role.firehose_role.arn
+    bucket_arn          = aws_s3_bucket.firehose_backup.arn
+    prefix              = "datadog-failed/"
     error_output_prefix = "datadog-errors/"
 
     cloudwatch_logging_options {
